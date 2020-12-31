@@ -10,6 +10,11 @@ defmodule HelloWeb.Router do
     plug HelloWeb.Plugs.Locale, "en"
   end
 
+  pipeline :review_checks do
+    plug :ensure_authenticated_user
+    plug :ensure_user_owns_review
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -43,6 +48,11 @@ defmodule HelloWeb.Router do
       resources "/reviews", ReviewController
       resources "/users", UserController
     end
+  end
+
+  scope "/reviews", HelloWeb do
+    pipe_through [:browser, :review_checks]
+    resources "/", ReviewController
   end
 
   # Enables LiveDashboard only for development
