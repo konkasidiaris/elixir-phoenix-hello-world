@@ -27,12 +27,23 @@ defmodule HelloWeb.Router do
 
     resources "/posts", PostController, only: [:index, :show]
     resources "/comments", CommentController, except: [:delete]
+    resources "/reviews", ReviewController
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", HelloWeb do
-  #   pipe_through :api
-  # end
+  scope "/admin", HelloWeb.Admin, as: :admin do
+    pipe_through :browser
+    resources "/reviews", ReviewController
+  end
+
+  scope "/api", HelloWeb.Api, as: :api do
+    pipe_through :api
+
+    scope "/v1", V1, as: :v1 do
+      resources "/images", ImageController
+      resources "/reviews", ReviewController
+      resources "/users", UserController
+    end
+  end
 
   # Enables LiveDashboard only for development
   #
