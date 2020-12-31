@@ -10,10 +10,10 @@ defmodule HelloWeb.Router do
     plug HelloWeb.Plugs.Locale, "en"
   end
 
-  pipeline :review_checks do
-    plug :ensure_authenticated_user
-    plug :ensure_user_owns_review
-  end
+  # pipeline :review_checks do
+  #   plug :ensure_authenticated_users
+  #   plug :ensure_user_owns_reviews
+  # end
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -23,6 +23,7 @@ defmodule HelloWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/page/:messenger", PageController, :show
     get "/hello", HelloController, :index
     get "/hello/:messenger", HelloController, :show
 
@@ -51,7 +52,8 @@ defmodule HelloWeb.Router do
   end
 
   scope "/reviews", HelloWeb do
-    pipe_through [:browser, :review_checks]
+    # pipe_through [:browser, :review_checks]
+    pipe_through :browser
     resources "/", ReviewController
   end
 
